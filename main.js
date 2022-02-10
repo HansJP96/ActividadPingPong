@@ -1,35 +1,32 @@
 
-
-window.addEventListener("load", main)
-
-
-function main() {
-
-    var board = new Board(700, 400);
-    var bar = new Bar(20, 100, 40, 100, board);
-    var bar_2 = new Bar(635, 100, 40, 100, board);
+var board = new Board(700, 400);
+var bar = new Bar(20, 100, 40, 100, board);
+var bar_2 = new Bar(635, 100, 40, 100, board);
 
 
-    var canvas = document.getElementById("canvas");
-    var board_view = new BoardView(canvas, board);
+var canvas = document.getElementById("canvas");
+var board_view = new BoardView(canvas, board);
 
 
-    document.addEventListener("keydown", (ev) => {
-        if (ev.key == "ArrowUp") {
-            bar.up();
-        } else if (ev.key == "ArrowDown") {
-            bar.down();
+document.addEventListener("keydown", (event) => {
+    if (event.key == "ArrowUp") {
+        bar.up();
+    } else if (event.key == "ArrowDown") {
+        bar.down();
 
-        } else if (ev.key == "w") {
-            bar.up();
+    } else if (event.key == "w") {
+        bar_2.up();
 
-        } else if (ev.key == "s") {
-            bar.down();
-        }
-        console.log(""+bar)
-    })
+    } else if (event.key == "s") {
+        bar_2.down();
+    }
+    event.preventDefault();
+})
 
+window.requestAnimationFrame(controller);
 
+function controller() {
+    board_view.clean();
     board_view.draw();
-    window.requestAnimationFrame(main);
+    window.requestAnimationFrame(controller);
 }

@@ -7,7 +7,7 @@ function generalDraw(ctx, element){
         default:
             break;
     }
-  }
+}
   
 class Board {
     constructor(width, height) {
@@ -42,7 +42,7 @@ class BoardView{
     draw(){
        for (let i = this.board.elements().length -1 ; i >= 0; i--) {
            let el = this.board.elements()[i];
-           generalDraw(this.ctx,el)
+           generalDraw(this.ctx,el);
        }
     }
 
