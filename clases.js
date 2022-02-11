@@ -138,7 +138,6 @@ class BoardView {
      */
     check_collisions() {
         if (hit(this.board, this.board.ball)) {
-            console.log("asd")
             this.board.ball.collisions(this.board);
         }
         for (let i = this.board.bars.length - 1; i >= 0; i--) {
