@@ -1,8 +1,8 @@
 
 var board = new Board(700, 400);
-var bar = new Bar(20, 100, 40, 100, board);
-var bar_2 = new Bar(640, 100, 40, 100, board);
-var ball = new Ball(350,100,10,board);
+var bar = new Bar(20, 150, 40, 100, board);
+var bar_2 = new Bar(640, 150, 40, 100, board);
+var ball = new Ball(350,200,10,board);
 
 var canvas = document.getElementById("canvas");
 var board_view = new BoardView(canvas, board);
