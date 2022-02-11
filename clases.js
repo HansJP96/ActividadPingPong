@@ -1,10 +1,15 @@
 function generalDraw(ctx, element) {
     switch (element.kind) {
         case "rectangle":
+            ctx.fillStyle = element.color;
             ctx.fillRect(element.x, element.y, element.width, element.height);
+            ctx.strokeStyle = "gray";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(element.x, element.y, element.width, element.height);
             break;
         case "circle":
             ctx.beginPath();
+            ctx.fillStyle = element.color;
             ctx.arc(element.x, element.y, element.radius, 0, 7);
             ctx.fill();
             ctx.closePath();
@@ -49,7 +54,7 @@ function hit(a, b) {
 }
 
 class Board {
-    constructor(width, height) {
+    constructor(width, height, color) {
         this.x = 0;
         this.width = width;
         this.height = height;
@@ -80,6 +85,7 @@ class BoardView {
     }
 
     draw() {
+
         for (let i = this.board.elements().length - 1; i >= 0; i--) {
             let el = this.board.elements()[i];
             generalDraw(this.ctx, el);
@@ -93,10 +99,12 @@ class BoardView {
         if (this.board.playing) {
             this.board.ball.move();
         }
+
     }
 
     check_collisions() {
         if (hit(this.board, this.board.ball)) {
+            console.log("asd")
             this.board.ball.collisions(this.board);
         }
         for (let i = this.board.bars.length - 1; i >= 0; i--) {
@@ -112,9 +120,10 @@ class BoardView {
 }
 
 class Bar {
-    constructor(x, y, width, height, board) {
+    constructor(x, y, width, height, color, board) {
         this.x = x;
         this.y = y;
+        this.color = color;
         this.width = width;
         this.height = height;
         this.board = board;
@@ -142,7 +151,7 @@ class Bar {
     }
 
     collisionsBoardDown() {
-         if (this.y + this.height >= this.board.height) {
+        if (this.y + this.height >= this.board.height) {
             return true
         } else return false
     }
@@ -153,16 +162,17 @@ class Bar {
 }
 
 class Ball {
-    constructor(x, y, radius, board) {
+    constructor(x, y, radius, color, board) {
         this.x = x;
         this.y = y;
+        this.color = color;
         this.radius = radius;
         this.speed_y = 0;
         this.speed_x = 3;
         this.board = board;
         this.direction = Math.random() > 0.5 ? 1 : -1;
         this.bounce_angle = 0;
-        this.max_bounce_angle = Math.PI / 5;
+        this.max_bounce_angle = Math.PI / 12;
         this.speed = 3;
 
         this.board.ball = this;
@@ -182,10 +192,12 @@ class Ball {
     }
 
     collisions(objectClass) {
+        console.log(this.bounce_angle)
         //Reacciona a la colisiones de la pelota con una barra que recibe como parametro
         switch (objectClass.constructor.name) {
             //Reacciona a la colisione con una barra que recibe como parametro
             case "Bar":
+
                 let relative_intersect_y = (objectClass.y + (objectClass.height / 2)) - this.y;
 
                 let normalized_intersect_y = relative_intersect_y / (objectClass.height / 2);
@@ -200,13 +212,16 @@ class Ball {
                 break;
             case "Board":
                 //Reacciona a la colision con el tablero que recibe como parametro
-                this.speed_y = this.speed * Math.sin(this.bounce_angle);
-
-                break;
-            default:
+     
+                    this.speed_y = this.speed * Math.sin(this.bounce_angle);
+   
                 break;
         }
 
+    }
+
+    collisionsbbb() {
+        this.speed_y = this.speed * Math.sin(this.bounce_angle);
     }
 
 }
