@@ -28,7 +28,6 @@ document.addEventListener("keydown", (event) => {
 window.requestAnimationFrame(controller);
 
 function controller() {
-    board_view.clean();
-    board_view.draw();
+    board_view.play();
     window.requestAnimationFrame(controller);
 }

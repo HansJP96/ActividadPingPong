@@ -51,7 +51,13 @@ class BoardView {
         }
     }
 
-
+    play() {
+        this.clean();
+        this.draw();
+        if (this.board.playing) {
+            this.board.ball.move();
+        } 
+    }
 
 }
 
@@ -94,7 +100,10 @@ class Ball {
         this.kind = "circle";
     }
 
-
+    move() {
+        this.x += (this.speed_x * this.direction);
+        this.y += this.speed_y;
+    }
 }
 
 
