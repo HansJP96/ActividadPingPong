@@ -1,8 +1,8 @@
 
 var board = new Board(700, 400);
 var bar = new Bar(20, 100, 40, 100, board);
-var bar_2 = new Bar(635, 100, 40, 100, board);
-
+var bar_2 = new Bar(640, 100, 40, 100, board);
+var ball = new Ball(350,100,10,board);
 
 var canvas = document.getElementById("canvas");
 var board_view = new BoardView(canvas, board);
@@ -19,6 +19,8 @@ document.addEventListener("keydown", (event) => {
 
     } else if (event.key == "s") {
         bar_2.down();
+    } else if (event.key === " " ){
+        board.playing = !board.playing;
     }
     event.preventDefault();
 })
