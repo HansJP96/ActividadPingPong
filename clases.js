@@ -18,7 +18,7 @@ function hit(a, b) {
     //Revisa si a colisiona con b
     var hit = false;
     //Colisiones horizontales (primer a.x + a.width mejora colision)
-    if (b.x + b.width >= a.x + a.width && b.x <= a.x + a.width) {
+    if (b.x + b.width / 2 >= a.x && b.x - b.width / 2 <= a.x + a.width) {
         //Colisiones verticales
         if (b.y + b.height >= a.y && b.y <= a.y + a.height) {
             hit = true
@@ -26,7 +26,7 @@ function hit(a, b) {
     }
 
     //Colision de a con b
-    if (b.x <= a.x  && b.x + b.width >= a.x + a.width) {
+    if (b.x - b.width <= a.x && b.x + b.width >= a.x + a.width) {
         if (b.y <= a.y && b.y + b.height >= a.y + a.height) {
             hit = true
         }
@@ -37,11 +37,20 @@ function hit(a, b) {
             hit = true
         }
     }
+
+    if (a.playing) {
+
+        if (b.y - b.height / 2 <= 0 || b.y >= a.height - b.height / 2) {
+            hit = true
+        }
+    }
+
     return hit;
 }
 
 class Board {
     constructor(width, height) {
+        this.x = 0;
         this.width = width;
         this.height = height;
         this.playing = false;
@@ -87,11 +96,15 @@ class BoardView {
     }
 
     check_collisions() {
+        if (hit(this.board, this.board.ball)) {
+            this.board.ball.collisions(this.board);
+        }
         for (let i = this.board.bars.length - 1; i >= 0; i--) {
             let bar = this.board.bars[i];
             if (hit(bar, this.board.ball)) {
                 this.board.ball.collisions(bar);
             }
+
         }
     }
 
@@ -111,11 +124,27 @@ class Bar {
     }
 
     down() {
-        this.y += this.speed;
+        if (!this.collisionsBoardDown()) {
+            this.y += this.speed;
+        }
     }
 
     up() {
-        this.y -= this.speed;
+        if (!this.collisionsBoardUp()) {
+            this.y -= this.speed;
+        }
+    }
+
+    collisionsBoardUp() {
+        if (this.y <= 0) {
+            return true
+        } else return false
+    }
+
+    collisionsBoardDown() {
+         if (this.y + this.height >= this.board.height) {
+            return true
+        } else return false
     }
 
     toString() {
@@ -129,12 +158,12 @@ class Ball {
         this.y = y;
         this.radius = radius;
         this.speed_y = 0;
-        this.speed_x = 2;
+        this.speed_x = 3;
         this.board = board;
         this.direction = Math.random() > 0.5 ? 1 : -1;
         this.bounce_angle = 0;
-        this.max_bounce_angle = Math.PI / 12;
-        this.speed = 2;
+        this.max_bounce_angle = Math.PI / 5;
+        this.speed = 3;
 
         this.board.ball = this;
         this.kind = "circle";
@@ -152,20 +181,34 @@ class Ball {
         this.y += this.speed_y;
     }
 
-    collisions(bar) {
-        //Reacciona a la colision con una barra que recibe como parametro
-        let relative_intersect_y = (bar.y + (bar.height / 2)) - this.y;
+    collisions(objectClass) {
+        //Reacciona a la colisiones de la pelota con una barra que recibe como parametro
+        switch (objectClass.constructor.name) {
+            //Reacciona a la colisione con una barra que recibe como parametro
+            case "Bar":
+                let relative_intersect_y = (objectClass.y + (objectClass.height / 2)) - this.y;
 
-        let normalized_intersect_y = relative_intersect_y / (bar.height / 2);;
-        this.bounce_angle = normalized_intersect_y * this.max_bounce_angle;
+                let normalized_intersect_y = relative_intersect_y / (objectClass.height / 2);
+                this.bounce_angle = normalized_intersect_y * this.max_bounce_angle;
 
-        this.speed_y = this.speed * -Math.sin(this.bounce_angle);
-        this.speed_x = this.speed * Math.cos(this.bounce_angle);
+                this.speed_y = this.speed * -Math.sin(this.bounce_angle);
+                this.speed_x = this.speed * Math.cos(this.bounce_angle);
 
-        if (this.x > (this.board.width / 2)) this.direction = -1;
-        else this.direction = 1;
+                if (this.x > (this.board.width / 2)) this.direction = -1;
+                else this.direction = 1;
+
+                break;
+            case "Board":
+                //Reacciona a la colision con el tablero que recibe como parametro
+                this.speed_y = this.speed * Math.sin(this.bounce_angle);
+
+                break;
+            default:
+                break;
+        }
 
     }
+
 }
 
 
