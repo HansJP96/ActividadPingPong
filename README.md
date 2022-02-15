@@ -10,7 +10,7 @@ Para poder jugar satisfactoriamente se deben utilizar las siguientes teclas:
 | &uarr; | Mueve la barra derecha hacia arriba del tablero |
 | &darr; | Mueve la barra derecha hacia abajo del tablero |
 | W | Mueve la barra izquierda hacia arriba del tablero |
-| S | Mueve la barra izquierda hacia arriba del tablero |
+| S | Mueve la barra izquierda hacia abajo del tablero |
 | Space | Permite Iniciar/Detener el movimiento de la pelota (*Funcion de Start/Pause*) |
 ## Preguntas
 1. ¿Como se aplica el metodo **requestAnimationFrame()** para mantener actualizada la animacion? 
